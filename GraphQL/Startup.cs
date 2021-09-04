@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Persistence.DBConnectionFactory;
 using Microsoft.Extensions.Logging;
 using Application.Albums;
+using GraphQL.Server.Ui.Voyager;
 
 namespace GraphQL
 {
@@ -39,7 +40,6 @@ namespace GraphQL
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
 		{
-			logger.LogInformation("Config Path: " + _configuration.GetConnectionString("DefaultConnection"));
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
@@ -51,6 +51,10 @@ namespace GraphQL
 			{
 				endpoints.MapGraphQL();
 			});
+
+			app.UseGraphQLVoyager(new VoyagerOptions(){
+                GraphQLEndPoint = "/graphql"
+            }, "/graphql-voyager");
 		}
 	}
 }

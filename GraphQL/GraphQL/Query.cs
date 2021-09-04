@@ -12,21 +12,8 @@ namespace GraphQL.GraphQL
 {
 	public class Query
 	{
-		// public List<WeatherForecast> GetWeatherForecasts([Service] IMediator mediator)
-		// {
-		// 	return mediator.Send(new List.Query()).Result;
-		// }
-
 		public List<Album> GetAlbums([Service] IMediator mediator)
         {
-            // Platform p = new Platform(){
-            //     Id = 1,
-            //     Name = "Ash",
-            //     LicensKey = "test"
-            // };
-        
-            // return p;
-
             var result = mediator.Send(new List.Query()).Result;
             return result;
         }
