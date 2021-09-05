@@ -28,7 +28,13 @@ namespace Application.Albums
                                            FROM albums al
                                            INNER JOIN artists ar ON ar.ArtistId = al.ArtistId";
 
-                var albums = await connection.QueryAsync<Album, Artist, Album>(allAlbums, (alburm, artist) => { alburm.Artist = artist; return alburm; }, splitOn: "ArtistId");
+                var albums = await connection.QueryAsync<Album, Artist, Album>(
+                             allAlbums, (alburm, artist) => 
+                             { 
+                                 alburm.Artist = artist; 
+                                 return alburm; 
+                             }, 
+                             splitOn: "ArtistId");
 
                 return albums.AsList();
             }
