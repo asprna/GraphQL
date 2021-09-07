@@ -14,6 +14,7 @@ using Persistence.DBConnectionFactory;
 using Microsoft.Extensions.Logging;
 using Application.Albums;
 using GraphQL.Server.Ui.Voyager;
+using GraphQL.GraphQL.ObjectTypes;
 
 namespace GraphQL
 {
@@ -32,7 +33,11 @@ namespace GraphQL
 		{
 			services.AddMediatR(typeof(List.Handler).Assembly);
 			services.AddGraphQLServer()
-				.AddQueryType<Query>();
+				.AddQueryType<Query>()
+				.AddType<AlbumType>()
+				.AddType<ArtistType>()
+				.AddFiltering()
+				.AddSorting();
 			
 			services.AddTransient<IConnectionFactory>(s => new SqliteConnectionFactory(_configuration.GetConnectionString("DefaultConnection")));
 		}
@@ -50,6 +55,11 @@ namespace GraphQL
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapGraphQL();
+
+				endpoints.MapGet("/", context =>
+				{
+					return Task.Run(() => context.Response.Redirect("/graphql"));
+				});
 			});
 
 			app.UseGraphQLVoyager(new VoyagerOptions(){

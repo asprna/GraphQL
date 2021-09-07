@@ -27,11 +27,31 @@ namespace Application.Artists
             {
                 var connection = _connection.GetDbConnection();
 
-                const string allArtist = @"SELECT * FROM artists";
+                const string allArtist = @"SELECT ar.Name, ar.artistid, al.ArtistId, al.AlbumId, al.Title
+                                            FROM artists ar
+                                            LEFT JOIN albums al ON al.ArtistId = ar.ArtistId
+                                            ORDER BY ar.artistid";
 
-                var albums = await connection.QueryAsync<Artist>(allArtist);
+                var artistDictonary = new Dictionary<int, Artist>();
 
-                return albums.AsList();
+                var artists = await connection.QueryAsync<Artist, Album, Artist>(
+                            allArtist, (artist, album) =>
+                            {
+                                Artist artistEntry;
+
+                                if (!artistDictonary.TryGetValue(artist.ArtistId, out artistEntry))
+                                {
+                                    artistEntry = artist;
+                                    artist.Albums = new List<Album>();
+                                    artistDictonary.Add(artistEntry.ArtistId, artistEntry);
+                                }
+
+                                artistEntry.Albums.Add(album);
+                                return artistEntry;
+                            },
+                             splitOn: "ArtistId, ArtistId");
+
+                return artists.Distinct().AsList();
             }
 		}
     }
