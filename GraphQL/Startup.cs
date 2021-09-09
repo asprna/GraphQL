@@ -36,10 +36,12 @@ namespace GraphQL
 			services.AddGraphQLServer()
 				.AddQueryType<Query>()
 				.AddMutationType<Mutation>()
+				.AddSubscriptionType<Subscription>()
 				.AddType<AlbumType>()
 				.AddType<ArtistType>()
 				.AddFiltering()
-				.AddSorting();
+				.AddSorting()
+				.AddInMemorySubscriptions();
 			
 			services.AddTransient<IConnectionFactory>(s => new SqliteConnectionFactory(_configuration.GetConnectionString("DefaultConnection")));
 		}
@@ -51,6 +53,8 @@ namespace GraphQL
 			{
 				app.UseDeveloperExceptionPage();
 			}
+
+			app.UseWebSockets();
 
 			app.UseRouting();
 
