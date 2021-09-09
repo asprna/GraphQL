@@ -14,6 +14,7 @@ using Persistence.DBConnectionFactory;
 using Microsoft.Extensions.Logging;
 using Application.Albums;
 using GraphQL.Server.Ui.Voyager;
+using GraphQL.GraphQL.Artists;
 using GraphQL.GraphQL.ObjectTypes;
 
 namespace GraphQL
@@ -34,6 +35,7 @@ namespace GraphQL
 			services.AddMediatR(typeof(List.Handler).Assembly);
 			services.AddGraphQLServer()
 				.AddQueryType<Query>()
+				.AddMutationType<Mutation>()
 				.AddType<AlbumType>()
 				.AddType<ArtistType>()
 				.AddFiltering()

@@ -1,6 +1,6 @@
 ﻿//using Application.WeatherForcast;
 using Albums = Application.Albums;
-using Artists = Application.Artists;
+using AppArtists = Application.Artists;
 using Domain;
 using HotChocolate;
 using MediatR;
@@ -26,7 +26,7 @@ namespace GraphQL.GraphQL
 		[UseSorting]
 		public List<Artist> GetArtists([Service] IMediator mediator)
 		{
-			var result = mediator.Send(new Artists.List.Query()).Result;
+			var result = mediator.Send(new AppArtists.List.Query()).Result;
 			return result;
 		}
 	}

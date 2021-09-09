@@ -30,9 +30,9 @@ namespace Application.Artists
 			{
 				var connection = _connection.GetDbConnection();
 
-				const string getArtist = @"SELECT TOP 1 ar.Name, ar.artistid FROM artists ar WHERE artistid = @ArtistId";
+				const string getArtist = @"SELECT ar.Name, ar.artistid FROM artists ar WHERE artistid = @ArtistId LIMIT 1";
 
-				var artist = await connection.QueryAsync<Artist>(getArtist, request.ArtistId);
+				var artist = await connection.QueryAsync<Artist>(getArtist, new { request.ArtistId });
 
 				return artist.FirstOrDefault();
 			}
