@@ -16,12 +16,11 @@ namespace GraphQL.GraphQL.ObjectTypes
 		protected override void Configure(IObjectTypeDescriptor<Album> descriptor)
 		{
 			descriptor.Description("Contains album details");
-			descriptor
-				.Field(p => p.Title).Ignore();
-
-			descriptor
-				.Field(p => p.Artist)
-				.Description("The artist of the album");
+			descriptor.Field(f => f.AlbumId).Type<IntType>().Name("AlbumId");
+			descriptor.Field(f => f.Title).Type<StringType>().Name("Title");
+			descriptor.Field(f => f.ArtistId).Type<IntType>().Name("ArtistId");
+			
+			descriptor.Field(f => f.Artist).Type<ArtistType>().Name("Artist").Description("The artist of the album");
 		}
 	}
 }

@@ -14,8 +14,21 @@ using Persistence.DBConnectionFactory;
 using Microsoft.Extensions.Logging;
 using Application.Albums;
 using GraphQL.Server.Ui.Voyager;
-using GraphQL.GraphQL.Artists;
 using GraphQL.GraphQL.ObjectTypes;
+using Domain;
+using Microsoft.AspNetCore.Identity;
+using Persistence;
+using Microsoft.EntityFrameworkCore;
+using GraphQL.Services;
+using GraphQL.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using GraphQL.GraphQL.MutationType;
+using GraphQL.GraphQL.QueryTypes;
+using GraphQL.Extensions;
+using GraphQL.DTOs;
+using FluentValidation;
 
 namespace GraphQL
 {
@@ -33,17 +46,40 @@ namespace GraphQL
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddMediatR(typeof(List.Handler).Assembly);
-			services.AddGraphQLServer()
-				.AddQueryType<Query>()
-				.AddMutationType<Mutation>()
-				.AddSubscriptionType<Subscription>()
-				.AddType<AlbumType>()
-				.AddType<ArtistType>()
-				.AddFiltering()
-				.AddSorting()
-				.AddInMemorySubscriptions();
+			services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
+			services.AddGraphQLService();
+
+			services.AddDbContext<DataContext>(opt =>
+			{
+				opt.UseSqlite(_configuration.GetConnectionString("AuthenticationConnection"));
+			});
+
+			services.AddIdentityCore<User>(opt =>
+			{
+				opt.Password.RequireNonAlphanumeric = false;
+			})
+				.AddRoles<IdentityRole>()
+				.AddEntityFrameworkStores<DataContext>()
+				.AddSignInManager<SignInManager<User>>();
+
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+				.AddJwtBearer(opt => {
+					opt.TokenValidationParameters = new TokenValidationParameters
+					{
+						ValidateIssuerSigningKey = true,
+						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("TokenSetting").GetValue<string>("Key"))),
+						ValidateIssuer = true,
+						ValidIssuer = _configuration.GetSection("TokenSetting").GetValue<string>("Issuer"),
+						ValidateAudience = true,
+						ValidAudience = _configuration.GetSection("TokenSetting").GetValue<string>("Audience")
+					};
+				});
+			services.AddAuthorization();
+
+			services.Configure<TokenSettings>(_configuration.GetSection("TokenSetting"));
 			
 			services.AddTransient<IConnectionFactory>(s => new SqliteConnectionFactory(_configuration.GetConnectionString("DefaultConnection")));
+			services.AddScoped<TokenServices>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +93,9 @@ namespace GraphQL
 			app.UseWebSockets();
 
 			app.UseRouting();
+
+			app.UseAuthentication();
+			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
 			{
