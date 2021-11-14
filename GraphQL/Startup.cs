@@ -51,7 +51,7 @@ namespace GraphQL
 
 			services.AddDbContext<DataContext>(opt =>
 			{
-				opt.UseSqlite(_configuration.GetConnectionString("AuthenticationConnection"));
+				opt.UseSqlite(_configuration.GetConnectionString("DefaultConnection"));
 			});
 
 			services.AddIdentityCore<User>(opt =>
