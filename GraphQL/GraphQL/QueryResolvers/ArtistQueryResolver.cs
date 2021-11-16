@@ -10,8 +10,6 @@ namespace GraphQL.GraphQL.QueryResolvers
 {
 	public class ArtistQueryResolver
 	{
-		//[UseFiltering]
-		//[UseSorting]
 		public async Task<List<Artist>> GetArtists([Service] IMediator mediator)
 		{
 			var result = await mediator.Send(new Application.Artists.List.Query());

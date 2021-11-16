@@ -1,5 +1,5 @@
-﻿using Dapper;
-using MediatR;
+﻿using MediatR;
+using Persistence;
 using Persistence.DBConnectionFactory;
 using System;
 using System.Collections.Generic;
@@ -19,19 +19,20 @@ namespace Application.Artists
 
 		public class Handler : IRequestHandler<Command>
 		{
-			private readonly IConnectionFactory _connection;
+			private readonly DataContext _dataContext;
 
-			public Handler(IConnectionFactory connection)
+			public Handler(DataContext dataContext)
 			{
-				_connection = connection;
+				_dataContext = dataContext;
 			}
+
 			public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
 			{
-				var connection = _connection.GetDbConnection();
+				var artist = _dataContext.Artists.FindAsync(request.ArtistId);
 
-				const string editArtist = @"DELETE artists WHERE ArtistId = @ArtistId";
+				_dataContext.Remove(artist);
 
-				await connection.ExecuteAsync(editArtist, request.ArtistId);
+				await _dataContext.SaveChangesAsync();
 
 				return Unit.Value;
 			}

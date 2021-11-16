@@ -23,7 +23,7 @@ namespace GraphQL.Services
 			{
 				error = error.RemoveExtensions().RemoveLocations().RemovePath();
 			}
-			return error.WithMessage(error.Code.Equals("FairyBread_ValidationError") ? error.Message : error.Exception?.Message ?? error.Message);
+			return error.WithMessage(error.Code?.Equals("FairyBread_ValidationError") ?? false ? error.Message : error.Exception?.Message ?? error.Message);
 		}
 	}
 }

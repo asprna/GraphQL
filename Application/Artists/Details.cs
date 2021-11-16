@@ -1,6 +1,7 @@
-﻿using Dapper;
-using Domain;
+﻿using Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
 using Persistence.DBConnectionFactory;
 using System;
 using System.Collections.Generic;
@@ -20,21 +21,22 @@ namespace Application.Artists
 
 		public class Handler : IRequestHandler<Query, Artist>
 		{
-			private readonly IConnectionFactory _connection;
+			private readonly DataContext _dataContext;
 
-			public Handler(IConnectionFactory connection)
+			public Handler(DataContext dataContext)
 			{
-				_connection = connection;
+				_dataContext = dataContext;
 			}
+
 			public async Task<Artist> Handle(Query request, CancellationToken cancellationToken)
 			{
-				var connection = _connection.GetDbConnection();
+				var artist = await _dataContext.Artists.SingleOrDefaultAsync(a => a.ArtistId == request.ArtistId, cancellationToken);
 
-				const string getArtist = @"SELECT ar.Name, ar.artistid FROM artists ar WHERE artistid = @ArtistId LIMIT 1";
+				if (artist == null) return null;
 
-				var artist = await connection.QueryAsync<Artist>(getArtist, new { request.ArtistId });
+				await _dataContext.Entry(artist).Collection(a => a.Albums).LoadAsync();
 
-				return artist.FirstOrDefault();
+				return artist;
 			}
 		}
 	}

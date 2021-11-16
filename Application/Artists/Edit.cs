@@ -1,6 +1,7 @@
-﻿using Dapper;
-using Domain;
+﻿using Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
 using Persistence.DBConnectionFactory;
 using System;
 using System.Collections.Generic;
@@ -20,20 +21,20 @@ namespace Application.Artists
 
 		public class Handler : IRequestHandler<Command>
 		{
-			private readonly IConnectionFactory _connection;
+			private readonly DataContext _dataContext;
 
-			public Handler(IConnectionFactory connection)
+			public Handler(DataContext dataContext)
 			{
-				_connection = connection;
+				_dataContext = dataContext;
 			}
 
 			public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
 			{
-				var connection = _connection.GetDbConnection();
+				var artist = await _dataContext.Artists.SingleAsync(id => id.ArtistId == request.Artist.ArtistId);
 
-				const string editArtist = @"UPDATE artists SET Name = @Name WHERE ArtistId = @ArtistId";
+				artist.Name = request.Artist.Name;
 
-				await connection.ExecuteAsync(editArtist, request.Artist.ArtistId);
+				await _dataContext.SaveChangesAsync();
 
 				return Unit.Value;
 			}

@@ -1,6 +1,7 @@
-﻿using Dapper;
+﻿using Application.Core;
 using Domain;
 using MediatR;
+using Persistence;
 using Persistence.DBConnectionFactory;
 using System;
 using System.Collections.Generic;
@@ -13,30 +14,29 @@ namespace Application.Artists
 {
 	public class Create
 	{
-		public class Command : IRequest<int>
+		public class Command : IRequest<Result<long>>
 		{
 			public Artist Artist { get; set; }
 		}
 
-		public class Handler : IRequestHandler<Command, int>
+		public class Handler : IRequestHandler<Command, Result<long>>
 		{
-			private readonly IConnectionFactory _connection;
+			private readonly DataContext _dataContext;
 
-			public Handler(IConnectionFactory connection)
+			public Handler(DataContext dataContext)
 			{
-				_connection = connection;
+				_dataContext = dataContext;
 			}
 
-			public async Task<int> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<Result<long>> Handle(Command request, CancellationToken cancellationToken)
 			{
-				var connection = _connection.GetDbConnection();
+				var artist = _dataContext.Artists.Add(request.Artist);
 
-				const string addArtist = @"INSERT INTO artists (Name) VALUES(@Name);
-											SELECT last_insert_rowid();";
+				var result = await _dataContext.SaveChangesAsync() > 0;
 
-				var result = await connection.QueryAsync<int>(addArtist, new { request.Artist.Name });
+				if (!result) return Result<long>.Failure("Failed to create artist");
 
-				return result.FirstOrDefault();
+				return Result<long>.Success(artist.Entity.ArtistId);
 			}
 		}
 	}

@@ -19,13 +19,15 @@ namespace GraphQL.GraphQL.MutationResolvers
 				Name = name
 			};
 
-			var id = await mediator.Send(new Application.Artists.Create.Command { Artist = artist });
+			var result = await mediator.Send(new Application.Artists.Create.Command { Artist = artist });
 
-			var result = await mediator.Send(new Application.Artists.Details.Query { ArtistId = id });
+			if (!result.IsSuccess) throw new Exception(result.Error);
 
-			await eventSender.SendAsync(nameof(Subscription.OnArtistAdded), result, cancellationToken);
+			var newArtist = await mediator.Send(new Application.Artists.Details.Query { ArtistId = (int)result.Value });
 
-			return result;
+			await eventSender.SendAsync(nameof(Subscription.OnArtistAdded), newArtist, cancellationToken);
+
+			return newArtist;
 		}
 	}
 }

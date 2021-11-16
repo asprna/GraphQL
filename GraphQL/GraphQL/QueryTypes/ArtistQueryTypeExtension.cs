@@ -18,14 +18,16 @@ namespace GraphQL.GraphQL.QueryTypes
 				.Field("GetArtists")
 				.ResolveWith<ArtistQueryResolver>(r => r.GetArtists(default))
 				.Type<ListType<ArtistType>>()
-				.Name("GetArtists");
+				.Name("GetArtists")
+				.Authorize(new[] { "Admin", "Artist", "Manager" });
 
 			descriptor
 				.Field("GetArtistById")
 				.ResolveWith<ArtistQueryResolver>(r => r.GetArtistByID(default, default))
 				.Type<ArtistType>()
 				.Argument("artistId", a => a.Type<IntType>())
-				.Name("GetArtistById");
+				.Name("GetArtistById")
+				.Authorize(new[] { "Admin", "Artist", "Manager" });
 		}
 	}
 }

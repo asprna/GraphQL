@@ -1,5 +1,4 @@
-﻿using Dapper;
-using Domain;
+﻿using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -28,9 +27,7 @@ namespace Application.Artists
 
             public async Task<List<Artist>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _dataContext.Artists
-                              .Include(a => a.Albums)
-                              .ToListAsync(cancellationToken);
+                return await _dataContext.Artists.ToListAsync(cancellationToken);
             }
 		}
     }
