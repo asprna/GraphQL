@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using Application.Core;
+using AutoMapper;
+using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -14,29 +16,35 @@ namespace Application.Artists
 {
 	public class Edit
 	{
-		public class Command : IRequest
+		public class Command : IRequest<Result<Unit>>
 		{
 			public Artist Artist { get; set; }
 		}
 
-		public class Handler : IRequestHandler<Command>
+		public class Handler : IRequestHandler<Command, Result<Unit>>
 		{
 			private readonly DataContext _dataContext;
+			private readonly IMapper _mapper;
 
-			public Handler(DataContext dataContext)
+			public Handler(DataContext dataContext, IMapper mapper)
 			{
 				_dataContext = dataContext;
+				_mapper = mapper;
 			}
 
-			public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
 			{
-				var artist = await _dataContext.Artists.SingleAsync(id => id.ArtistId == request.Artist.ArtistId);
+				var artist = await _dataContext.Artists.SingleOrDefaultAsync(id => id.ArtistId == request.Artist.ArtistId);
 
-				artist.Name = request.Artist.Name;
+				if (artist == null) return Result<Unit>.Failure("Artist not found");
 
-				await _dataContext.SaveChangesAsync();
+				_mapper.Map(request.Artist, artist);
 
-				return Unit.Value;
+				var result = await _dataContext.SaveChangesAsync() > 0;
+
+				if (!result) return Result<Unit>.Failure("Failed to update Artist");
+
+				return Result<Unit>.Success(Unit.Value);
 			}
 		}
 	}

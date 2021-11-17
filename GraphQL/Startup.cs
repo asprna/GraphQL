@@ -29,6 +29,7 @@ using GraphQL.GraphQL.QueryTypes;
 using GraphQL.Extensions;
 using GraphQL.DTOs;
 using FluentValidation;
+using Application.Helper;
 
 namespace GraphQL
 {
@@ -48,6 +49,9 @@ namespace GraphQL
 			services.AddMediatR(typeof(List.Handler).Assembly);
 			services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
 			services.AddGraphQLService();
+
+			//Register AutoMapper
+			services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 			services.AddDbContext<DataContext>(opt =>
 			{

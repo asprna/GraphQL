@@ -16,7 +16,7 @@ namespace Application.Artists
 	{
 		public class Query : IRequest<Artist>
 		{
-			public int ArtistId { get; set; }
+			public long ArtistId { get; set; }
 		}
 
 		public class Handler : IRequestHandler<Query, Artist>
