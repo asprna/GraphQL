@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Application.Core;
+using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -14,9 +15,9 @@ namespace Application.Artists
 {
 	public class List
 	{
-        public class Query : IRequest<List<Artist>> { }
+        public class Query : IRequest<Result<List<Artist>>> { }
 
-        public class Handler : IRequestHandler<Query, List<Artist>>
+        public class Handler : IRequestHandler<Query, Result<List<Artist>>>
         {
 			private readonly DataContext _dataContext;
 
@@ -25,9 +26,17 @@ namespace Application.Artists
 				_dataContext = dataContext;
 			}
 
-            public async Task<List<Artist>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<Artist>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _dataContext.Artists.ToListAsync(cancellationToken);
+				try
+				{
+                    return Result<List<Artist>>.Success(await _dataContext.Artists.ToListAsync(cancellationToken));
+                }
+				catch
+				{
+                    return Result<List<Artist>>.Failure("Unable to get Artists");
+                }
+                
             }
 		}
     }

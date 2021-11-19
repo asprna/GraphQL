@@ -34,17 +34,25 @@ namespace Application.Artists
 
 			public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
 			{
-				var artist = await _dataContext.Artists.SingleOrDefaultAsync(id => id.ArtistId == request.Artist.ArtistId);
+				try
+				{
+					var artist = await _dataContext.Artists.SingleOrDefaultAsync(id => id.ArtistId == request.Artist.ArtistId);
 
-				if (artist == null) return Result<Unit>.Failure("Artist not found");
+					if (artist == null) return Result<Unit>.Failure("Artist not found");
 
-				_mapper.Map(request.Artist, artist);
+					_mapper.Map(request.Artist, artist);
 
-				var result = await _dataContext.SaveChangesAsync() > 0;
+					var result = await _dataContext.SaveChangesAsync() > 0;
 
-				if (!result) return Result<Unit>.Failure("Failed to update Artist");
+					if (!result) return Result<Unit>.Failure("Failed to update Artist");
 
-				return Result<Unit>.Success(Unit.Value);
+					return Result<Unit>.Success(Unit.Value);
+				}
+				catch
+				{
+					return Result<Unit>.Failure("Failed to update Artist");
+				}
+				
 			}
 		}
 	}

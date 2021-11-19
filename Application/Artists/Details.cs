@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Application.Core;
+using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -14,12 +15,12 @@ namespace Application.Artists
 {
 	public class Details
 	{
-		public class Query : IRequest<Artist>
+		public class Query : IRequest<Result<Artist>>
 		{
 			public long ArtistId { get; set; }
 		}
 
-		public class Handler : IRequestHandler<Query, Artist>
+		public class Handler : IRequestHandler<Query, Result<Artist>>
 		{
 			private readonly DataContext _dataContext;
 
@@ -28,15 +29,23 @@ namespace Application.Artists
 				_dataContext = dataContext;
 			}
 
-			public async Task<Artist> Handle(Query request, CancellationToken cancellationToken)
+			public async Task<Result<Artist>> Handle(Query request, CancellationToken cancellationToken)
 			{
-				var artist = await _dataContext.Artists.SingleOrDefaultAsync(a => a.ArtistId == request.ArtistId, cancellationToken);
+				try
+				{
+					var artist = await _dataContext.Artists.SingleOrDefaultAsync(a => a.ArtistId == request.ArtistId, cancellationToken);
 
-				if (artist == null) return null;
+					if (artist == null) return Result<Artist>.Failure("Failed to get details about Artist");
 
-				await _dataContext.Entry(artist).Collection(a => a.Albums).LoadAsync();
+					await _dataContext.Entry(artist).Collection(a => a.Albums).LoadAsync();
 
-				return artist;
+					return Result<Artist>.Success(artist);
+				}
+				catch
+				{
+					return Result<Artist>.Failure("Failed to get details about Artist");
+				}
+				
 			}
 		}
 	}

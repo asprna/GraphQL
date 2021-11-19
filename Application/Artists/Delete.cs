@@ -29,17 +29,25 @@ namespace Application.Artists
 
 			public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
 			{
-				var artist = await _dataContext.Artists.FindAsync(request.ArtistId);
+				try
+				{
+					var artist = await _dataContext.Artists.FindAsync(request.ArtistId);
 
-				if (artist == null) return Result<Unit>.Failure("Failed to delete Artist");
+					if (artist == null) return Result<Unit>.Failure("Failed to delete Artist");
 
-				_dataContext.Remove(artist);
+					_dataContext.Remove(artist);
 
-				var result = await _dataContext.SaveChangesAsync() > 0;
+					var result = await _dataContext.SaveChangesAsync() > 0;
 
-				if (!result) return Result<Unit>.Failure("Failed to delete Artist");
+					if (!result) return Result<Unit>.Failure("Failed to delete Artist");
 
-				return Result<Unit>.Success(Unit.Value);
+					return Result<Unit>.Success(Unit.Value);
+				}
+				catch
+				{
+					return Result<Unit>.Failure("Failed to delete Artist");
+				}
+				
 			}
 		}
 	}

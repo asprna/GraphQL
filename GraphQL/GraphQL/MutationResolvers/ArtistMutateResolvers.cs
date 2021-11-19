@@ -25,9 +25,9 @@ namespace GraphQL.GraphQL.MutationResolvers
 
 			var newArtist = await mediator.Send(new Application.Artists.Details.Query { ArtistId = result.Value });
 
-			await eventSender.SendAsync(nameof(Subscription.OnArtistAdded), newArtist, cancellationToken);
+			await eventSender.SendAsync(nameof(Subscription.OnArtistAdded), newArtist.Value, cancellationToken);
 
-			return newArtist;
+			return newArtist.Value;
 		}
 
 		public async Task<Artist> EditArtistAsync(Artist artist, [Service] IMediator mediator, CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ namespace GraphQL.GraphQL.MutationResolvers
 
 			var updatedArtist = await mediator.Send(new Application.Artists.Details.Query { ArtistId = artist.ArtistId });
 
-			return updatedArtist;
+			return updatedArtist.Value;
 		}
 
 		public async Task<string> DeleteArtistAsync(long artistId, [Service] IMediator mediator, CancellationToken cancellationToken)
