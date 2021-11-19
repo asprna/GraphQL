@@ -1,5 +1,5 @@
 ﻿using Domain;
-using Domain.DTOs;
+using FluentValidation;
 using HotChocolate.Types;
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,15 @@ namespace GraphQL.GraphQL.InputType
 			descriptor.Description("Artist Input Type");
 			descriptor.Field(f => f.ArtistId).Name("ArtistID").Type<LongType>();
 			descriptor.Field(f => f.Name).Name("Name").Type<StringType>();
+		}
+	}
+
+	public class ArtistValidator : AbstractValidator<Artist>
+	{
+		public ArtistValidator()
+		{
+			RuleFor(input => input.ArtistId).NotEmpty().GreaterThan(0).WithMessage("Artist Id is invalid");
+			RuleFor(input => input.Name).NotEmpty().WithMessage("Name is invalid");
 		}
 	}
 }
