@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +12,9 @@ namespace Application.Albums
 {
     public class List
     {
-        public class Query : IRequest<List<Album>> { }
+        public class Query : IRequest<Result<List<Album>>> { }
 
-        public class Handler : IRequestHandler<Query, List<Album>>
+        public class Handler : IRequestHandler<Query, Result<List<Album>>>
         {
             private readonly DataContext _dataContext;
 
@@ -22,9 +23,16 @@ namespace Application.Albums
                 _dataContext = dataContext;
             }
 
-            public async Task<List<Album>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<Album>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _dataContext.Albums.ToListAsync();
+				try
+				{
+                    return Result<List<Album>>.Success(await _dataContext.Albums.ToListAsync());
+                }
+				catch
+				{
+                    return Result<List<Album>>.Failure("Unable get Albums");
+				}
             }
         }
     }

@@ -13,13 +13,19 @@ namespace GraphQL.GraphQL.QueryResolvers
 		public async Task<List<Album>> GetAlbums([Service] IMediator mediator)
 		{
 			var result = await mediator.Send(new Application.Albums.List.Query());
-			return result;
+
+			if (!result.IsSuccess) throw new Exception(result.Error);
+
+			return result.Value;
 		}
 
 		public async Task<Album> GetAlbumsById(int albumId, [Service] IMediator mediator)
 		{
 			var result = await mediator.Send(new Application.Albums.Details.Query { AlbumId = albumId });
-			return result;
+
+			if (!result.IsSuccess) throw new Exception(result.Error);
+
+			return result.Value;
 		}
 	}
 }
