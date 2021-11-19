@@ -1,5 +1,4 @@
 ﻿using FairyBread;
-using GraphQL.DTOs;
 using GraphQL.GraphQL.InputType;
 using GraphQL.GraphQL.MutationResolvers;
 using GraphQL.GraphQL.ObjectTypes;
@@ -18,19 +17,19 @@ namespace GraphQL.GraphQL.MutationType
 			descriptor.Name("Mutation");
 
 			descriptor.Field("Login")
-				.ResolveWith<AuthenticationMutateResolvers>(f => f.LoginAsync(default, default, default, default, default))
+				.ResolveWith<AuthenticationMutateResolvers>(f => f.LoginAsync(default, default))
 				.Argument("loginDto", a => a.Type<LoginType>())
 				.Type<UserType>()
 				.Name("Login");
 
 			descriptor.Field("Register")
-				.ResolveWith<AuthenticationMutateResolvers>(f => f.Register(default, default, default, default))
+				.ResolveWith<AuthenticationMutateResolvers>(f => f.Register(default, default))
 				.Argument("registerDto", a => a.Type<RegisterType>())
 				.Type<UserType>()
 				.Name("Register");
 
 			descriptor.Field("RefreshToken")
-				.ResolveWith<AuthenticationMutateResolvers>(f => f.RefreshToken(default, default, default))
+				.ResolveWith<AuthenticationMutateResolvers>(f => f.RefreshToken(default))
 				.Type<UserType>()
 				.Name("RefreshToken")
 				.Authorize();

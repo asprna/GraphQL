@@ -1,4 +1,4 @@
-﻿using GraphQL.DTOs;
+﻿using Domain.DTOs;
 using HotChocolate.Types;
 using System;
 using System.Collections.Generic;

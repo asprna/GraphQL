@@ -27,10 +27,10 @@ using System.Text;
 using GraphQL.GraphQL.MutationType;
 using GraphQL.GraphQL.QueryTypes;
 using GraphQL.Extensions;
-using GraphQL.DTOs;
 using FluentValidation;
 using Application.Helper;
 using GraphQL.GraphQL.InputType;
+using Application.Interfaces;
 
 namespace GraphQL
 {
@@ -48,7 +48,7 @@ namespace GraphQL
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddMediatR(typeof(List.Handler).Assembly);
-			services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
+			//services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
 			services.AddValidatorsFromAssemblyContaining<ArtistValidator>();
 			services.AddGraphQLService();
 
@@ -86,6 +86,7 @@ namespace GraphQL
 			
 			services.AddTransient<IConnectionFactory>(s => new SqliteConnectionFactory(_configuration.GetConnectionString("DefaultConnection")));
 			services.AddScoped<TokenServices>();
+			services.AddScoped<IAuthenticationService, AuthenticationService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

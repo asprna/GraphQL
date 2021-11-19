@@ -1,5 +1,4 @@
-﻿using GraphQL.DTOs;
-using GraphQL.GraphQL;
+﻿using GraphQL.GraphQL;
 using GraphQL.GraphQL.MutationResolvers;
 using GraphQL.GraphQL.MutationType;
 using GraphQL.GraphQL.ObjectTypes;
