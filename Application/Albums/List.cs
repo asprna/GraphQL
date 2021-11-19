@@ -6,11 +6,13 @@ using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using Persistence.DBConnectionFactory;
 
 namespace Application.Albums
 {
-    public class List
+    /// <summary>
+    /// Query handler for getting all the albums.
+    /// </summary>
+	public class List
     {
         public class Query : IRequest<Result<List<Album>>> { }
 

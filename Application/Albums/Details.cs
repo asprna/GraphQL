@@ -3,16 +3,14 @@ using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using Persistence.DBConnectionFactory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.Albums
 {
+	/// <summary>
+	/// Query handler for Album details.
+	/// </summary>
 	public class Details
 	{
 		public class Query : IRequest<Result<Album>>
