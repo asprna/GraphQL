@@ -30,13 +30,21 @@ namespace Application.Artists
 
 			public async Task<Result<long>> Handle(Command request, CancellationToken cancellationToken)
 			{
-				var artist = _dataContext.Artists.Add(request.Artist);
+				try
+				{
+					var artist = _dataContext.Artists.Add(request.Artist);
 
-				var result = await _dataContext.SaveChangesAsync() > 0;
+					var result = await _dataContext.SaveChangesAsync() > 0;
 
-				if (!result) return Result<long>.Failure("Failed to create artist");
+					if (!result) return Result<long>.Failure("Failed to create artist");
 
-				return Result<long>.Success(artist.Entity.ArtistId);
+					return Result<long>.Success(artist.Entity.ArtistId);
+				}
+				catch
+				{
+					return Result<long>.Failure("Failed to create artist");
+				}
+				
 			}
 		}
 	}
