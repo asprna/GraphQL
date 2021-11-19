@@ -29,6 +29,13 @@ namespace GraphQL.GraphQL.MutationType
 				.Type<ArtistType>()
 				.Name("EditArtist")
 				.Authorize(new[] { "Admin", "Artist", "Manager" });
+
+			descriptor.Field("DeleteArtist")
+				.ResolveWith<ArtistMutateResolvers>(f => f.DeleteArtistAsync(default, default, default))
+				.Argument("artistId", a => a.Type<LongType>())
+				.Type<StringType>()
+				.Name("DeleteArtist")
+				.Authorize(new[] { "Admin", "Artist", "Manager" });
 		}
 	}
 }

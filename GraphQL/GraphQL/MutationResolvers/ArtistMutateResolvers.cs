@@ -40,5 +40,14 @@ namespace GraphQL.GraphQL.MutationResolvers
 
 			return updatedArtist;
 		}
+
+		public async Task<string> DeleteArtistAsync(long artistId, [Service] IMediator mediator, CancellationToken cancellationToken)
+		{
+			var result = await mediator.Send(new Application.Artists.Delete.Command { ArtistId = artistId });
+
+			if (!result.IsSuccess) throw new Exception(result.Error);
+
+			return "Success";
+		}
 	}
 }
