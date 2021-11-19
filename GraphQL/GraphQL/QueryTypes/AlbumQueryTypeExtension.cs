@@ -19,6 +19,13 @@ namespace GraphQL.GraphQL.QueryTypes
 				.ResolveWith<AlbumQueryResolver>(r => r.GetAlbums(default))
 				.Type<ListType<AlbumType>>()
 				.Name("GetAlbums");
+
+			descriptor
+				.Field("GetAlbum")
+				.ResolveWith<AlbumQueryResolver>(r => r.GetAlbumsById(default, default))
+				.Type<AlbumType>()
+				.Argument("albumId", a => a.Type<IntType>())
+				.Name("GetAlbum");
 		}
 	}
 }

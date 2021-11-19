@@ -10,11 +10,15 @@ namespace GraphQL.GraphQL.QueryResolvers
 {
 	public class AlbumQueryResolver
 	{
-		//[UseFiltering]
-		//[UseSorting]
 		public async Task<List<Album>> GetAlbums([Service] IMediator mediator)
 		{
 			var result = await mediator.Send(new Application.Albums.List.Query());
+			return result;
+		}
+
+		public async Task<Album> GetAlbumsById(int albumId, [Service] IMediator mediator)
+		{
+			var result = await mediator.Send(new Application.Albums.Details.Query { AlbumId = albumId });
 			return result;
 		}
 	}
