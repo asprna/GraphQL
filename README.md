@@ -43,8 +43,8 @@ The API was built using open-source Hot Chocolate server. I have used code-first
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
+[contributors-shield]: https://img.shields.io/github/contributors/asprna/musicstore?style=for-the-badge
+[contributors-url]: https://github.com/asprna/musicstore/graphs/contributors
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/asanka-ash-nawagamuwage-30b2295/
 [architecture]: images/clean-architecture.png
