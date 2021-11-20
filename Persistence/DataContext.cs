@@ -1,15 +1,12 @@
-﻿using System;
-using Domain;
+﻿using Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Persistence;
 
 #nullable disable
 
 namespace Persistence
 {
-    public partial class DataContext : IdentityDbContext<User>
+	public partial class DataContext : IdentityDbContext<User>
     {
         public DataContext()
         {
