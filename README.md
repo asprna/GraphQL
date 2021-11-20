@@ -4,9 +4,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-As part of my personal training, I wanted to build an GraphQL API with authentication. At the same time I wanted use the CQRS patten using Mediator. Also used the Clear Architecture freamwork.
+As part of my personal training, I wanted to build an GraphQL API with authentication. At the same time I have used the CQRS patten utilising Mediator. This project is based on the Clear Architecture freamwork.
 
-The API was built using open-source Hot Chocolate server. I have used code-first approch as it gives move control over the object types.
+The API was built using open-source Hot Chocolate server. I have used code-first approch as it gives more control over the object types.
 
 ![Clean Architecture][architecture]
 
