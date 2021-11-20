@@ -8,7 +8,7 @@ As part of my personal training, I wanted to build an GraphQL API with authentic
 
 The API was built using open-source Hot Chocolate server. I have used code-first approch as it gives move control over the object types.
 
-[![Clean Architecture][architecture]]
+![Clean Architecture][architecture]
 
 ### Dependencies
 
