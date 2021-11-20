@@ -3,13 +3,8 @@ using GraphQL.Services;
 using HotChocolate;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Security.Claims;
 using Application.Interfaces;
 using Domain.DTOs;
 

@@ -1,12 +1,7 @@
-﻿using FairyBread;
-using GraphQL.GraphQL.InputType;
+﻿using GraphQL.GraphQL.InputType;
 using GraphQL.GraphQL.MutationResolvers;
 using GraphQL.GraphQL.ObjectTypes;
 using HotChocolate.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GraphQL.GraphQL.MutationType
 {

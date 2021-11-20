@@ -1,13 +1,5 @@
 ﻿using Domain;
-using HotChocolate;
 using HotChocolate.Types;
-using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Albums = Application.Albums;
-using Artists = Application.Artists;
 
 namespace GraphQL.GraphQL.ObjectTypes
 {

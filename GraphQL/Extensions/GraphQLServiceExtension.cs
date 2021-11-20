@@ -1,15 +1,9 @@
-﻿using GraphQL.GraphQL;
-using GraphQL.GraphQL.MutationResolvers;
-using GraphQL.GraphQL.MutationType;
+﻿using GraphQL.GraphQL.MutationType;
 using GraphQL.GraphQL.ObjectTypes;
 using GraphQL.GraphQL.QueryTypes;
 using GraphQL.Services;
 using HotChocolate.Types;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GraphQL.Extensions
 {
@@ -19,7 +13,6 @@ namespace GraphQL.Extensions
 		{
 			services.AddGraphQLServer()
 				.AddFairyBread()
-				//.AddQueryType<Query>()
 				.AddQueryType(q => q.Name("Query"))
 				// this option will, by default, define that you want to declare everything explicitly.
 				.ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
@@ -28,16 +21,9 @@ namespace GraphQL.Extensions
 				.AddMutationType(m => m.Name("Mutation"))
 				.AddTypeExtension<ArtistMutationTypeExtension>()
 				.AddTypeExtension<AuthenticationMutationTypeExtension>()
-				//.AddProjections()
 				.AddSubscriptionType<SubscriptionType>()
-				//.AddType<AlbumType>()
-				//.AddType<ArtistType>()
-				//.AddType<LoginType>()
-				//.AddFiltering()
-				//.AddSorting()
 				.AddInMemorySubscriptions()
 				.AddAuthorization()
-				//.AddFluentValidation()
 				;
 
 			services.AddErrorFilter<ErrorFilterService>();
